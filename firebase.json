@@ -1,53 +1,10 @@
 {
   "hosting": {
-    "public": ".",
-    "cleanUrls": true,
-    "trailingSlash": false,
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "**/*.md"],
-    "redirects": [
-      {
-        "source": "/index.html",
-        "destination": "/",
-        "type": 301
-      },
-      {
-        "source": "/anyllm.html",
-        "destination": "/anyllm",
-        "type": 301
-      }
-    ],
-    "headers": [
-      {
-        "source": "/app-ads.txt",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public,max-age=3600"
-          },
-          {
-            "key": "Content-Type",
-            "value": "text/plain; charset=utf-8"
-          }
-        ]
-      },
-      {
-        "source": "**/*.@(jpg|jpeg|gif|png|webp|svg)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public,max-age=31536000,immutable"
-          }
-        ]
-      },
-      {
-        "source": "**/*.@(html|xml|txt)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public,max-age=3600"
-          }
-        ]
-      }
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
     ]
   }
 }
