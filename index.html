@@ -1,0 +1,1666 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Dotwel Labs — Product Studio</title>
+        <meta
+            name="description"
+            content="Dotwel Labs is a product-based company crafting useful digital apps, tools, and experiences."
+        />
+
+        <link rel="canonical" href="https://dotwellabs.com/" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600;700&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+
+        <style>
+            :root {
+                --ink: #07120f;
+                --deep: #0c1d18;
+                --moss: #16352d;
+                --cream: #f4ead2;
+                --paper: #fff8e7;
+                --line: rgba(7, 18, 15, 0.16);
+                --muted: rgba(244, 234, 210, 0.72);
+                --muted-dark: rgba(7, 18, 15, 0.66);
+                --acid: #c8ff4a;
+                --ember: #ff6b2b;
+                --cyan: #53e7d4;
+                --gold: #e7bd59;
+                --shadow: 0 24px 80px rgba(0, 0, 0, 0.18);
+                --radius-xl: 34px;
+                --radius-lg: 24px;
+                --radius-md: 16px;
+                --max: 1180px;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: "Bricolage Grotesque", sans-serif;
+                background:
+                    radial-gradient(
+                        circle at 12% 10%,
+                        rgba(200, 255, 74, 0.12),
+                        transparent 28%
+                    ),
+                    radial-gradient(
+                        circle at 84% 14%,
+                        rgba(255, 107, 43, 0.14),
+                        transparent 27%
+                    ),
+                    linear-gradient(
+                        135deg,
+                        #07120f 0%,
+                        #0d201b 45%,
+                        #102820 100%
+                    );
+                color: var(--cream);
+                overflow-x: hidden;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                z-index: 100;
+                opacity: 0.14;
+                background-image:
+                    linear-gradient(
+                        rgba(255, 255, 255, 0.05) 1px,
+                        transparent 1px
+                    ),
+                    linear-gradient(
+                        90deg,
+                        rgba(255, 255, 255, 0.04) 1px,
+                        transparent 1px
+                    );
+                background-size: 38px 38px;
+                mask-image: linear-gradient(to bottom, black, transparent 88%);
+            }
+
+            body::after {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                z-index: 101;
+                opacity: 0.08;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+            img {
+                max-width: 100%;
+                display: block;
+            }
+            button,
+            input,
+            textarea {
+                font: inherit;
+            }
+
+            .container {
+                width: min(var(--max), calc(100% - 40px));
+                margin-inline: auto;
+            }
+
+            .mono {
+                font-family: "Azeret Mono", monospace;
+                letter-spacing: -0.04em;
+            }
+
+            .eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                font-family: "Azeret Mono", monospace;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--acid);
+            }
+
+            .eyebrow::before {
+                content: "";
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                background: var(--acid);
+                box-shadow: 0 0 24px var(--acid);
+            }
+
+            .section {
+                padding: 110px 0;
+                position: relative;
+            }
+            .section-title {
+                margin-top: 18px;
+                font-size: clamp(42px, 6vw, 82px);
+                line-height: 0.92;
+                letter-spacing: -0.07em;
+                max-width: 850px;
+            }
+
+            .section-copy {
+                color: var(--muted);
+                font-size: 19px;
+                line-height: 1.65;
+                max-width: 640px;
+                margin-top: 24px;
+            }
+
+            /* Navigation */
+            .nav {
+                position: fixed;
+                top: 18px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: min(var(--max), calc(100% - 28px));
+                z-index: 50;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 14px;
+                border: 1px solid rgba(244, 234, 210, 0.16);
+                background: rgba(7, 18, 15, 0.66);
+                backdrop-filter: blur(18px);
+                border-radius: 999px;
+                box-shadow: 0 14px 50px rgba(0, 0, 0, 0.24);
+                animation: navDrop 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+            }
+
+            @keyframes navDrop {
+                from {
+                    opacity: 0;
+                    transform: translate(-50%, -22px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translate(-50%, 0);
+                }
+            }
+
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                padding-left: 4px;
+                font-weight: 800;
+                letter-spacing: -0.04em;
+            }
+
+            .brand-mark {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: transparent;
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+
+            .brand-mark img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            .nav-links a {
+                font-size: 14px;
+                font-weight: 700;
+                padding: 10px 14px;
+                color: rgba(244, 234, 210, 0.78);
+                border-radius: 999px;
+                transition: 250ms ease;
+            }
+
+            .nav-links a:hover {
+                color: var(--ink);
+                background: var(--acid);
+            }
+
+            .nav-cta {
+                padding: 11px 18px;
+                border-radius: 999px;
+                background: var(--cream);
+                color: var(--ink);
+                font-weight: 800;
+                box-shadow: 0 8px 0 rgba(200, 255, 74, 0.32);
+                transition: 250ms ease;
+            }
+
+            .nav-cta:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 11px 0 rgba(200, 255, 74, 0.45);
+            }
+
+            .mobile-toggle {
+                display: none;
+                border: 0;
+                background: var(--cream);
+                color: var(--ink);
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                cursor: pointer;
+                font-weight: 900;
+            }
+
+            /* Hero Section */
+            .hero {
+                min-height: 100vh;
+                padding: 150px 0 80px;
+                display: grid;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .hero-grid {
+                display: grid;
+                grid-template-columns: 1.15fr 0.85fr;
+                gap: 50px;
+                align-items: center;
+            }
+
+            .hero h1 {
+                margin-top: 22px;
+                font-size: clamp(62px, 9vw, 132px);
+                line-height: 0.82;
+                letter-spacing: -0.085em;
+                max-width: 890px;
+                animation: rise 900ms cubic-bezier(0.22, 1, 0.36, 1) both 120ms;
+            }
+
+            .hero h1 span {
+                color: transparent;
+                -webkit-text-stroke: 1.4px var(--cream);
+                text-shadow: none;
+            }
+
+            .hero-copy {
+                margin-top: 34px;
+                color: var(--muted);
+                font-size: clamp(18px, 2vw, 23px);
+                line-height: 1.55;
+                max-width: 670px;
+                animation: rise 900ms cubic-bezier(0.22, 1, 0.36, 1) both 240ms;
+            }
+
+            .hero-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 14px;
+                margin-top: 36px;
+                animation: rise 900ms cubic-bezier(0.22, 1, 0.36, 1) both 360ms;
+            }
+
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                min-height: 56px;
+                padding: 0 28px;
+                border-radius: 999px;
+                font-weight: 800;
+                transition: 260ms cubic-bezier(0.22, 1, 0.36, 1);
+                border: 1px solid transparent;
+                cursor: pointer;
+            }
+
+            .btn-primary {
+                background: var(--acid);
+                color: var(--ink);
+                box-shadow: 0 12px 0 rgba(0, 0, 0, 0.35);
+            }
+
+            .btn-primary:hover {
+                transform: translateY(-4px) rotate(-1deg);
+                box-shadow: 0 18px 0 rgba(0, 0, 0, 0.35);
+            }
+
+            .btn-secondary {
+                border-color: rgba(244, 234, 210, 0.28);
+                color: var(--cream);
+                background: rgba(244, 234, 210, 0.06);
+            }
+
+            .btn-secondary:hover {
+                background: var(--cream);
+                color: var(--ink);
+                transform: translateY(-4px) rotate(1deg);
+            }
+
+            @keyframes rise {
+                from {
+                    opacity: 0;
+                    transform: translateY(26px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Hero Lab Device & Cards Alignment Fixes */
+            .lab-panel {
+                position: relative;
+                min-height: 590px;
+                width: 100%;
+                animation: panelIn 1100ms cubic-bezier(0.22, 1, 0.36, 1) both
+                    420ms;
+            }
+
+            @keyframes panelIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(34px) scale(0.96);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            .device {
+                position: absolute;
+                inset: 40px 0 auto auto;
+                width: min(400px, 100%);
+                height: 500px;
+                border-radius: 42px;
+                background:
+                    linear-gradient(
+                        160deg,
+                        rgba(255, 255, 255, 0.14),
+                        rgba(255, 255, 255, 0.03)
+                    ),
+                    var(--moss);
+                border: 1px solid rgba(244, 234, 210, 0.22);
+                box-shadow: var(--shadow);
+                overflow: hidden;
+            }
+
+            .device::before {
+                content: "";
+                position: absolute;
+                inset: 16px;
+                border: 1px solid rgba(244, 234, 210, 0.14);
+                border-radius: 30px;
+                pointer-events: none;
+            }
+
+            .device-top {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 30px;
+            }
+
+            .lights {
+                display: flex;
+                gap: 8px;
+            }
+            .lights span {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: var(--ember);
+            }
+            .lights span:nth-child(2) {
+                background: var(--gold);
+            }
+            .lights span:nth-child(3) {
+                background: var(--cyan);
+            }
+
+            .device-label {
+                font-family: "Azeret Mono", monospace;
+                font-size: 11px;
+                color: rgba(244, 234, 210, 0.58);
+                letter-spacing: 0.1em;
+            }
+
+            .orbit {
+                position: absolute;
+                width: 310px;
+                height: 310px;
+                border: 1px dashed rgba(244, 234, 210, 0.26);
+                border-radius: 50%;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -45%);
+                animation: spin 18s linear infinite;
+            }
+
+            .orbit:nth-child(2) {
+                width: 220px;
+                height: 220px;
+                animation-duration: 13s;
+                animation-direction: reverse;
+                border-color: rgba(83, 231, 212, 0.32);
+            }
+
+            @keyframes spin {
+                to {
+                    transform: translate(-50%, -45%) rotate(360deg);
+                }
+            }
+
+            .dot {
+                position: absolute;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background: var(--acid);
+                top: 20px;
+                left: 42px;
+                box-shadow: 0 0 26px var(--acid);
+            }
+
+            .orbit:nth-child(2) .dot {
+                background: var(--ember);
+                box-shadow: 0 0 26px var(--ember);
+                top: 160px;
+                left: 0;
+            }
+
+            .terminal {
+                position: absolute;
+                left: 34px;
+                right: 34px;
+                bottom: 34px;
+                padding: 20px;
+                border-radius: 22px;
+                background: rgba(7, 18, 15, 0.68);
+                border: 1px solid rgba(244, 234, 210, 0.15);
+                font-family: "Azeret Mono", monospace;
+                font-size: 12px;
+                color: rgba(244, 234, 210, 0.74);
+                line-height: 1.8;
+                z-index: 10;
+            }
+
+            .terminal strong {
+                color: var(--acid);
+                font-weight: 700;
+            }
+
+            /* Redesigned Floating Cards */
+            .floating-card {
+                position: absolute;
+                z-index: 20;
+                width: 230px;
+                padding: 20px;
+                border-radius: 24px;
+                background: rgba(255, 248, 231, 0.95);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                color: var(--ink);
+                box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+                animation: float 5s ease-in-out infinite;
+            }
+
+            /* Position updates to prevent hiding terminal */
+            .floating-card.one {
+                left: -30px;
+                top: 30px;
+                transform: rotate(-4deg);
+            }
+
+            .floating-card.two {
+                right: -20px;
+                top: 220px;
+                bottom: auto;
+                transform: rotate(5deg);
+                animation-delay: -1.5s;
+            }
+
+            @keyframes float {
+                0%,
+                100% {
+                    translate: 0 0;
+                }
+                50% {
+                    translate: 0 -12px;
+                }
+            }
+
+            .floating-card .tag {
+                display: inline-block;
+                font-family: "Azeret Mono", monospace;
+                font-size: 10px;
+                font-weight: 800;
+                text-transform: uppercase;
+                color: var(--ink);
+                background: var(--acid);
+                padding: 5px 8px;
+                border-radius: 999px;
+                margin-bottom: 12px;
+            }
+
+            .floating-card h3 {
+                font-size: 26px;
+                line-height: 0.95;
+                letter-spacing: -0.06em;
+            }
+
+            .floating-card p {
+                margin-top: 10px;
+                font-size: 14px;
+                color: rgba(7, 18, 15, 0.66);
+                line-height: 1.4;
+            }
+
+            /* Ticker */
+            .ticker-wrap {
+                border-block: 1px solid rgba(244, 234, 210, 0.18);
+                overflow: hidden;
+                background: rgba(244, 234, 210, 0.05);
+            }
+
+            .ticker {
+                display: flex;
+                width: max-content;
+                animation: marquee 28s linear infinite;
+            }
+
+            .ticker span {
+                display: inline-flex;
+                align-items: center;
+                gap: 18px;
+                padding: 22px 24px;
+                font-family: "Azeret Mono", monospace;
+                font-size: 13px;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: rgba(244, 234, 210, 0.72);
+                white-space: nowrap;
+            }
+
+            .ticker b {
+                color: var(--acid);
+            }
+
+            @keyframes marquee {
+                to {
+                    transform: translateX(-50%);
+                }
+            }
+
+            /* Apps Section */
+            .apps {
+                background: var(--paper);
+                color: var(--ink);
+            }
+            .apps .eyebrow {
+                color: var(--ember);
+            }
+            .apps .eyebrow::before {
+                background: var(--ember);
+                box-shadow: 0 0 20px var(--ember);
+            }
+            .apps .section-copy {
+                color: var(--muted-dark);
+            }
+
+            /* Updated to 2-column grid to focus on 1 app + 1 coming soon */
+            .app-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+                margin-top: 54px;
+                max-width: 1000px;
+            }
+
+            /* Flexbox layout inside app-card for perfect alignment */
+            .app-card {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                min-height: 480px;
+                padding: 36px;
+                border: 1px solid var(--line);
+                border-radius: var(--radius-xl);
+                background: #fff3d7;
+                overflow: hidden;
+                transition: 450ms cubic-bezier(0.22, 1, 0.36, 1);
+                isolation: isolate;
+            }
+
+            .app-card:nth-child(2) {
+                background: #e9fbdd;
+            }
+
+            .app-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 32px 70px rgba(7, 18, 15, 0.17);
+            }
+
+            .app-card::before {
+                content: "";
+                position: absolute;
+                width: 260px;
+                height: 260px;
+                border-radius: 50%;
+                right: -100px;
+                top: -100px;
+                background: var(--ember);
+                opacity: 0.16;
+                z-index: -1;
+                transition: 450ms ease;
+                filter: blur(30px);
+            }
+
+            .app-card:nth-child(2)::before {
+                background: var(--cyan);
+                opacity: 0.3;
+            }
+            .app-card:hover::before {
+                scale: 1.28;
+            }
+
+            .app-icon {
+                width: 78px;
+                height: 78px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 22px;
+                background: var(--ink);
+                color: var(--cream);
+                font-size: 34px;
+                box-shadow: 0 10px 0 rgba(7, 18, 15, 0.12);
+                overflow: hidden;
+                margin-bottom: 30px;
+            }
+
+            .app-icon img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: inherit;
+            }
+
+            .app-card h3 {
+                font-size: 42px;
+                line-height: 0.95;
+                letter-spacing: -0.07em;
+                margin-bottom: 16px;
+            }
+            .app-card p {
+                color: rgba(7, 18, 15, 0.7);
+                line-height: 1.6;
+                font-size: 17px;
+                margin-bottom: 24px;
+            }
+
+            .app-store-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                background: var(--ink);
+                color: var(--cream);
+                padding: 14px 28px;
+                border-radius: 14px;
+                font-weight: 700;
+                font-size: 15px;
+                margin-top: auto;
+                margin-bottom: 28px;
+                transition: 200ms ease;
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+                width: fit-content;
+            }
+
+            .app-store-btn:hover {
+                background: #1a2f28;
+                transform: translateY(-2px);
+            }
+
+            .app-meta {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-top: 22px;
+                border-top: 1px solid rgba(7, 18, 15, 0.12);
+                font-family: "Azeret Mono", monospace;
+                font-size: 12px;
+                color: rgba(7, 18, 15, 0.62);
+                margin-top: auto; /* Pushes to bottom if no button */
+            }
+
+            /* About Section */
+            .about {
+                position: relative;
+            }
+            .about-layout {
+                display: grid;
+                grid-template-columns: 0.9fr 1.1fr;
+                gap: 70px;
+                align-items: start;
+            }
+
+            .about-card {
+                position: sticky;
+                top: 120px;
+                padding: 34px;
+                border-radius: var(--radius-xl);
+                background: linear-gradient(
+                    160deg,
+                    rgba(244, 234, 210, 0.13),
+                    rgba(244, 234, 210, 0.04)
+                );
+                border: 1px solid rgba(244, 234, 210, 0.17);
+                box-shadow: var(--shadow);
+            }
+
+            .about-card h3 {
+                font-size: 46px;
+                line-height: 0.95;
+                letter-spacing: -0.07em;
+            }
+            .about-card p {
+                margin-top: 20px;
+                color: var(--muted);
+                line-height: 1.7;
+                font-size: 17px;
+            }
+
+            .metric-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
+                margin-top: 28px;
+            }
+            .metric {
+                padding: 22px;
+                border-radius: 22px;
+                background: rgba(244, 234, 210, 0.08);
+                border: 1px solid rgba(244, 234, 210, 0.11);
+            }
+            .metric strong {
+                display: block;
+                font-size: 42px;
+                letter-spacing: -0.07em;
+                color: var(--acid);
+            }
+            .metric span {
+                display: block;
+                margin-top: 6px;
+                color: rgba(244, 234, 210, 0.64);
+                font-size: 13px;
+                font-family: "Azeret Mono", monospace;
+            }
+
+            .principles {
+                display: grid;
+                gap: 16px;
+            }
+            .principle {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                gap: 22px;
+                padding: 28px;
+                border: 1px solid rgba(244, 234, 210, 0.16);
+                border-radius: var(--radius-lg);
+                background: rgba(244, 234, 210, 0.06);
+                transition: 320ms ease;
+            }
+
+            .principle:hover {
+                background: rgba(244, 234, 210, 0.1);
+                transform: translateX(10px);
+            }
+
+            .principle-number {
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                display: grid;
+                place-items: center;
+                background: var(--cream);
+                color: var(--ink);
+                font-family: "Azeret Mono", monospace;
+                font-weight: 800;
+                font-size: 13px;
+            }
+
+            .principle h4 {
+                font-size: 27px;
+                letter-spacing: -0.05em;
+            }
+            .principle p {
+                margin-top: 8px;
+                color: var(--muted);
+                line-height: 1.6;
+            }
+
+            /* Blog (Coming Soon) */
+            .blog {
+                background: #0a1714;
+            }
+            .blog-head {
+                display: flex;
+                justify-content: space-between;
+                gap: 30px;
+                align-items: end;
+            }
+
+            .blog-empty-state {
+                padding: 60px 30px;
+                text-align: center;
+                border: 1px dashed rgba(244, 234, 210, 0.25);
+                border-radius: var(--radius-xl);
+                margin-top: 50px;
+                background: rgba(244, 234, 210, 0.03);
+            }
+
+            .blog-empty-state h3 {
+                font-size: 32px;
+                letter-spacing: -0.05em;
+                margin-bottom: 12px;
+            }
+            .blog-empty-state p {
+                color: var(--muted);
+                font-size: 18px;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            /* Contact */
+            .contact-strip {
+                padding: 80px 0;
+                background: var(--acid);
+                color: var(--ink);
+                overflow: hidden;
+            }
+            .contact-box {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                gap: 30px;
+                align-items: center;
+            }
+            .contact-box h2 {
+                font-size: clamp(46px, 7vw, 92px);
+                line-height: 0.88;
+                letter-spacing: -0.08em;
+                max-width: 850px;
+            }
+            .contact-box .btn {
+                background: var(--ink);
+                color: var(--cream);
+                min-width: 190px;
+                box-shadow: 0 12px 0 rgba(7, 18, 15, 0.18);
+            }
+
+            /* Footer */
+            .footer {
+                padding: 70px 0 34px;
+                background: var(--ink);
+            }
+            .footer-grid {
+                display: grid;
+                grid-template-columns: 1.1fr 0.9fr 0.9fr 1fr;
+                gap: 40px;
+            }
+            .footer h3 {
+                font-size: 34px;
+                letter-spacing: -0.06em;
+            }
+            .footer p {
+                margin-top: 16px;
+                color: rgba(244, 234, 210, 0.62);
+                line-height: 1.6;
+                max-width: 340px;
+            }
+
+            .footer-col h4 {
+                font-family: "Azeret Mono", monospace;
+                font-size: 12px;
+                text-transform: uppercase;
+                color: var(--acid);
+                letter-spacing: 0.1em;
+                margin-bottom: 16px;
+            }
+
+            .footer-col a {
+                display: block;
+                width: fit-content;
+                color: rgba(244, 234, 210, 0.68);
+                margin: 10px 0;
+                transition: 220ms ease;
+            }
+
+            .footer-col a:hover {
+                color: var(--acid);
+                transform: translateX(4px);
+            }
+
+            .socials {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .socials a {
+                display: grid;
+                place-items: center;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                border: 1px solid rgba(244, 234, 210, 0.16);
+                color: var(--cream);
+                transition: 240ms ease;
+                font-family: "Azeret Mono", monospace;
+                font-size: 12px;
+                font-weight: 800;
+            }
+
+            .socials a:hover {
+                background: var(--cream);
+                color: var(--ink);
+                transform: translateY(-4px) rotate(-8deg);
+            }
+
+            .footer-bottom {
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+                padding-top: 34px;
+                margin-top: 50px;
+                border-top: 1px solid rgba(244, 234, 210, 0.13);
+                color: rgba(244, 234, 210, 0.48);
+                font-family: "Azeret Mono", monospace;
+                font-size: 12px;
+            }
+
+            .reveal {
+                opacity: 0;
+                transform: translateY(26px);
+                transition:
+                    opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+                    transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            .reveal.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .cursor-light {
+                position: fixed;
+                width: 420px;
+                height: 420px;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 0;
+                background: radial-gradient(
+                    circle,
+                    rgba(200, 255, 74, 0.12),
+                    transparent 62%
+                );
+                transform: translate(-50%, -50%);
+                opacity: 0;
+                transition: opacity 300ms ease;
+            }
+
+            /* Page transition animation */
+            @keyframes pageExit {
+                from {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+            }
+
+            body.exiting {
+                animation: pageExit 400ms cubic-bezier(0.22, 1, 0.36, 1)
+                    forwards;
+            }
+
+            .app-card.clickable {
+                cursor: pointer;
+            }
+
+            @media (max-width: 980px) {
+                .nav-links,
+                .nav-cta {
+                    display: none;
+                }
+                .mobile-toggle {
+                    display: block;
+                }
+                .nav.open {
+                    border-radius: 28px;
+                    align-items: flex-start;
+                }
+                .nav.open .nav-links {
+                    position: absolute;
+                    display: grid;
+                    left: 14px;
+                    right: 14px;
+                    top: 64px;
+                    padding: 12px;
+                    border-radius: 22px;
+                    background: rgba(7, 18, 15, 0.94);
+                    border: 1px solid rgba(244, 234, 210, 0.14);
+                }
+                .nav.open .nav-links a {
+                    padding: 14px;
+                }
+
+                .hero-grid,
+                .about-layout,
+                .contact-box {
+                    grid-template-columns: 1fr;
+                }
+                .hero {
+                    padding-top: 130px;
+                }
+                .lab-panel {
+                    min-height: 560px;
+                }
+                .device {
+                    left: 50%;
+                    right: auto;
+                    transform: translateX(-50%);
+                }
+
+                .floating-card.one {
+                    left: 10px;
+                    top: 20px;
+                }
+                .floating-card.two {
+                    right: 10px;
+                    top: 200px;
+                    bottom: auto;
+                }
+
+                .app-grid,
+                .footer-grid {
+                    grid-template-columns: 1fr;
+                }
+                .blog-head {
+                    display: block;
+                }
+                .about-card {
+                    position: relative;
+                    top: auto;
+                }
+            }
+
+            @media (max-width: 620px) {
+                .container {
+                    width: min(var(--max), calc(100% - 26px));
+                }
+                .section {
+                    padding: 78px 0;
+                }
+                .hero h1 {
+                    font-size: clamp(58px, 18vw, 88px);
+                }
+                .hero-copy {
+                    font-size: 18px;
+                }
+                .lab-panel {
+                    min-height: 500px;
+                }
+                .device {
+                    height: 440px;
+                }
+
+                .floating-card {
+                    width: 200px;
+                    padding: 14px;
+                }
+                .floating-card h3 {
+                    font-size: 22px;
+                }
+                .floating-card.one {
+                    left: 0px;
+                    top: 10px;
+                }
+                .floating-card.two {
+                    right: 0px;
+                    top: 180px;
+                    bottom: auto;
+                }
+
+                .app-card {
+                    min-height: auto;
+                    padding: 26px;
+                }
+                .app-card h3 {
+                    font-size: 32px;
+                }
+                .metric-grid,
+                .principle {
+                    grid-template-columns: 1fr;
+                }
+                .contact-box .btn {
+                    width: 100%;
+                }
+                .footer-bottom {
+                    flex-direction: column;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    animation-duration: 0.001ms !important;
+                    animation-iteration-count: 1 !important;
+                    scroll-behavior: auto !important;
+                    transition-duration: 0.001ms !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="cursor-light" aria-hidden="true"></div>
+
+        <nav class="nav" aria-label="Primary navigation">
+            <a href="#home" class="brand" aria-label="Dotwel Labs home">
+                <div class="brand-mark" aria-hidden="true">
+                    <img src="assets/logo.png" alt="Dotwel Labs Logo" />
+                </div>
+                <span>Dotwel Labs</span>
+            </a>
+
+            <div class="nav-links" id="navLinks">
+                <a href="#apps">Our Apps</a>
+                <a href="#about">About</a>
+                <a href="#blog">Blog</a>
+                <a href="#contact">Contact</a>
+            </div>
+
+            <a href="#apps" class="nav-cta">Explore products</a>
+
+            <button
+                class="mobile-toggle"
+                id="mobileToggle"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+        </nav>
+
+        <main>
+            <section class="hero" id="home">
+                <div class="container hero-grid">
+                    <div>
+                        <span class="eyebrow">Independent Product Lab</span>
+                        <h1>
+                            Useful apps, built with uncommon care.
+                            <span>Dot by dot.</span>
+                        </h1>
+                        <p class="hero-copy">
+                            Dotwel Labs designs and ships focused digital
+                            products for people who value speed, clarity,
+                            reliability, and a little bit of delight inside
+                            everyday software.
+                        </p>
+                        <div class="hero-actions">
+                            <a href="#apps" class="btn btn-primary"
+                                >View our apps →</a
+                            >
+                            <a href="#about" class="btn btn-secondary"
+                                >How we build</a
+                            >
+                        </div>
+                    </div>
+
+                    <div class="lab-panel" aria-hidden="true">
+                        <!-- Card 1 aligned correctly to avoid terminal overlap -->
+                        <div class="floating-card one">
+                            <span class="tag">Build Log</span>
+                            <h3>AnyLLM now live on Play Store</h3>
+                            <p>Stable release out. Fast inference loops.</p>
+                        </div>
+
+                        <div class="device">
+                            <div class="device-top">
+                                <div class="lights">
+                                    <span></span><span></span><span></span>
+                                </div>
+                                <div class="device-label">DOTWEL/CORE</div>
+                            </div>
+
+                            <div class="orbit"><span class="dot"></span></div>
+                            <div class="orbit"><span class="dot"></span></div>
+
+                            <div class="terminal">
+                                <div>
+                                    <strong>status:</strong> lab operational
+                                </div>
+                                <div>
+                                    <strong>focus:</strong> utility &
+                                    performance
+                                </div>
+                                <div>
+                                    <strong>method:</strong> research →
+                                    prototype → ship
+                                </div>
+                                <div>
+                                    <strong>signal:</strong> less noise, more
+                                    usefulness
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 aligned correctly -->
+                        <div class="floating-card two">
+                            <span class="tag">Philosophy</span>
+                            <h3>Built with intent.</h3>
+                            <p>
+                                Dotwel Labs crafts digital tools that respect
+                                your time and daily workflow.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="ticker-wrap" aria-hidden="true">
+                <div class="ticker">
+                    <span><b>Dotwel Labs</b> Product Studio</span>
+                    <span>AI Chat Clients</span>
+                    <span>BYOK Architecture</span>
+                    <span>Tool Calling</span>
+                    <span>Agent Debates</span>
+                    <span>Fast Prototypes</span>
+                    <span><b>Dotwel Labs</b> Product Studio</span>
+                    <span>AI Chat Clients</span>
+                    <span>BYOK Architecture</span>
+                    <span>Tool Calling</span>
+                    <span>Agent Debates</span>
+                    <span>Fast Prototypes</span>
+                </div>
+            </div>
+
+            <section class="section apps" id="apps">
+                <div class="container">
+                    <span class="eyebrow reveal">Our Apps</span>
+                    <h2 class="section-title reveal">
+                        Products designed for daily momentum.
+                    </h2>
+                    <p class="section-copy reveal">
+                        We create compact, high-utility apps that solve specific
+                        problems without becoming bloated platforms. Currently
+                        scaling our flagship AI client, with more tools in the
+                        lab.
+                    </p>
+
+                    <div class="app-grid">
+                        <!-- App 1: AnyLLM -->
+                        <article
+                            class="app-card reveal clickable"
+                            data-navigate="anyllm"
+                        >
+                            <div class="app-icon">
+                                <img
+                                    src="assets/anyllm-logo.png"
+                                    alt="AnyLLM Icon"
+                                />
+                            </div>
+                            <h3>AnyLLM: AI Chat Client</h3>
+                            <p>
+                                A powerful BYOK (Bring Your Own Key) chat
+                                client. Supports multiple providers, easily add
+                                custom endpoints, run tool calling, perform web
+                                searches, and experience our unique AI agent
+                                debate system.
+                            </p>
+
+                            <a
+                                href="https://play.google.com/store/apps/details?id=com.dotwellabs.anyllm"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="app-store-btn"
+                            >
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <polygon
+                                        points="5 3 19 12 5 21 5 3"
+                                    ></polygon>
+                                </svg>
+                                Get on Google Play
+                            </a>
+
+                            <div class="app-meta">
+                                <span>Productivity / AI</span>
+                                <span style="color: #059669; font-weight: 700"
+                                    >Live</span
+                                >
+                            </div>
+                        </article>
+
+                        <!-- App 2: Coming Soon -->
+                        <article
+                            class="app-card reveal"
+                            style="
+                                background: rgba(244, 234, 210, 0.03);
+                                border: 1px dashed rgba(7, 18, 15, 0.2);
+                                box-shadow: none;
+                            "
+                        >
+                            <div
+                                class="app-icon"
+                                style="
+                                    background: transparent;
+                                    border: 2px dashed rgba(7, 18, 15, 0.15);
+                                    color: rgba(7, 18, 15, 0.3);
+                                "
+                            >
+                                ?
+                            </div>
+                            <h3 style="color: rgba(7, 18, 15, 0.6)">
+                                Lab Experiment #02
+                            </h3>
+                            <p style="color: rgba(7, 18, 15, 0.5)">
+                                We are currently experimenting with our next
+                                tool in the lab. It focuses on simplifying
+                                complex, repetitive daily workflows. Stay tuned
+                                for the preview drop.
+                            </p>
+
+                            <div
+                                class="app-meta"
+                                style="
+                                    opacity: 0.6;
+                                    border-color: rgba(7, 18, 15, 0.08);
+                                "
+                            >
+                                <span>Internal Tools</span>
+                                <span>In Development</span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section about" id="about">
+                <div class="container about-layout">
+                    <div class="about-card reveal">
+                        <span class="eyebrow">About Dotwel</span>
+                        <h3>
+                            We are a product company, not a feature factory.
+                        </h3>
+                        <p>
+                            Dotwel Labs builds owned products from first
+                            principles. We look for underserved workflows,
+                            simplify them, and turn them into durable apps with
+                            strong design systems.
+                        </p>
+
+                        <div class="metric-grid">
+                            <div class="metric">
+                                <strong>01</strong>
+                                <span>Active products</span>
+                            </div>
+                            <div class="metric">
+                                <strong>12k</strong>
+                                <span>Prototype lines</span>
+                            </div>
+                            <div class="metric">
+                                <strong>99%</strong>
+                                <span>Clarity obsession</span>
+                            </div>
+                            <div class="metric">
+                                <strong>24h</strong>
+                                <span>Iteration rhythm</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="principles">
+                        <article class="principle reveal">
+                            <div class="principle-number">01</div>
+                            <div>
+                                <h4>
+                                    Start with a painful, repeatable problem.
+                                </h4>
+                                <p>
+                                    We do not chase trends. We study repeated
+                                    friction, map the workflow, and build only
+                                    where software can create a meaningful
+                                    shortcut.
+                                </p>
+                            </div>
+                        </article>
+
+                        <article class="principle reveal">
+                            <div class="principle-number">02</div>
+                            <div>
+                                <h4>Give control back to the user.</h4>
+                                <p>
+                                    Whether it's Bring Your Own Key (BYOK)
+                                    architecture or local processing, we believe
+                                    in apps that respect user autonomy and data
+                                    privacy.
+                                </p>
+                            </div>
+                        </article>
+
+                        <article class="principle reveal">
+                            <div class="principle-number">03</div>
+                            <div>
+                                <h4>Ship small, then listen aggressively.</h4>
+                                <p>
+                                    We prefer focused releases over giant
+                                    launches. The best product decisions come
+                                    from real usage, not endless planning
+                                    documents.
+                                </p>
+                            </div>
+                        </article>
+
+                        <article class="principle reveal">
+                            <div class="principle-number">04</div>
+                            <div>
+                                <h4>Make the invisible details excellent.</h4>
+                                <p>
+                                    Speed, empty states, keyboard flows, helpful
+                                    errors, loading moments, and microcopy are
+                                    treated as core product features.
+                                </p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Blog Section updated to empty state -->
+            <section class="section blog" id="blog">
+                <div class="container">
+                    <div class="blog-head">
+                        <div>
+                            <span class="eyebrow reveal">Blog</span>
+                            <h2 class="section-title reveal">
+                                Notes from the lab.
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="blog-empty-state reveal">
+                        <h3>Writing engine is warming up...</h3>
+                        <p>
+                            We are currently focused on shipping code. Check
+                            back later for our build logs, technical deep dives,
+                            and product philosophy.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="contact-strip" id="contact">
+                <div class="container contact-box">
+                    <h2 class="reveal">
+                        Have a product idea worth making real?
+                    </h2>
+                    <a href="mailto:hello@dotwellabs.com" class="btn reveal"
+                        >hello@dotwellabs.com</a
+                    >
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div>
+                        <a href="#home" class="brand">
+                            <div class="brand-mark" aria-hidden="true">
+                                <img
+                                    src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23c8ff4a'/><text x='50' y='55' font-family='sans-serif' font-weight='bold' font-size='45' text-anchor='middle' fill='%2307120f' dominant-baseline='middle'>DL</text></svg>"
+                                    alt="Dotwel Labs Logo"
+                                />
+                            </div>
+                            <span>Dotwel Labs</span>
+                        </a>
+                        <p>
+                            An independent product studio building practical,
+                            user-controlled apps for modern teams and operators.
+                        </p>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <a href="#apps">Our Apps</a>
+                        <a href="#about">About</a>
+                        <a href="#blog">Blog</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>Products</h4>
+                        <a href="anyllm">AnyLLM Chat</a>
+                        <a href="#">Lab Experiments</a>
+                        <a href="#">Product Roadmap</a>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>Social</h4>
+                        <div class="socials">
+                            <a href="#" aria-label="LinkedIn">in</a>
+                            <a href="#" aria-label="Twitter or X">X</a>
+                            <a href="#" aria-label="GitHub">gh</a>
+                            <a href="#" aria-label="Instagram">ig</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <span
+                        >© <span id="year"></span> Dotwel Labs. All rights
+                        reserved.</span
+                    >
+                    <span>Designed for products with purpose.</span>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            const mobileToggle = document.getElementById("mobileToggle");
+            const nav = document.querySelector(".nav");
+            const navLinks = document.querySelectorAll(".nav-links a");
+
+            mobileToggle.addEventListener("click", () => {
+                nav.classList.toggle("open");
+                mobileToggle.textContent = nav.classList.contains("open")
+                    ? "×"
+                    : "☰";
+            });
+
+            navLinks.forEach((link) => {
+                link.addEventListener("click", () => {
+                    nav.classList.remove("open");
+                    mobileToggle.textContent = "☰";
+                });
+            });
+
+            document.getElementById("year").textContent =
+                new Date().getFullYear();
+
+            const revealItems = document.querySelectorAll(".reveal");
+            const revealObserver = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("visible");
+                            revealObserver.unobserve(entry.target);
+                        }
+                    });
+                },
+                { threshold: 0.14, rootMargin: "0px 0px -60px 0px" },
+            );
+
+            revealItems.forEach((item, index) => {
+                item.style.transitionDelay = `${Math.min(index * 45, 280)}ms`;
+                revealObserver.observe(item);
+            });
+
+            // Handle clickable app card navigation with a minimal fade transition.
+            document
+                .querySelectorAll("article[data-navigate]")
+                .forEach((card) => {
+                    card.addEventListener("click", function (event) {
+                        if (event.target.closest("a")) return;
+
+                        const url = this.getAttribute("data-navigate");
+                        document.body.classList.add("exiting");
+
+                        setTimeout(() => {
+                            window.location.href = url;
+                        }, 400);
+                    });
+                });
+
+            const cursorLight = document.querySelector(".cursor-light");
+            window.addEventListener("pointermove", (event) => {
+                cursorLight.style.opacity = "1";
+                cursorLight.style.left = `${event.clientX}px`;
+                cursorLight.style.top = `${event.clientY}px`;
+            });
+            window.addEventListener("pointerleave", () => {
+                cursorLight.style.opacity = "0";
+            });
+        </script>
+    </body>
+</html>
