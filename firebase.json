@@ -20,6 +20,11 @@
         "source": "/anyllm.html",
         "destination": "/anyllm",
         "type": 301
+      },
+      {
+        "source": "/anyllm/privacy-policy.html",
+        "destination": "/anyllm/privacy-policy",
+        "type": 301
       }
     ],
     "headers": [

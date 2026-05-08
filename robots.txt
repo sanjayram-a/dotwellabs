@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Allow: /app-ads.txt
 
-Sitemap: https://dotwellabs.com/sitemap.xml
+Sitemap: https://dotwellabs.web.app/sitemap.xml
