@@ -1556,8 +1556,8 @@
                     <h2 class="reveal">
                         Have a product idea worth making real?
                     </h2>
-                    <a href="mailto:hello@dotwellabs.com" class="btn reveal"
-                        >hello@dotwellabs.com</a
+                    <a href="mailto:dotwelmail@gmail.com" class="btn reveal"
+                        >dotwelmail@gmail.com</a
                     >
                 </div>
             </section>
@@ -1673,6 +1673,13 @@
                         }, 400);
                     });
                 });
+
+            // Remove exiting class when page is restored from bfcache (browser back).
+            window.addEventListener("pageshow", (event) => {
+                if (event.persisted) {
+                    document.body.classList.remove("exiting");
+                }
+            });
 
             const cursorLight = document.querySelector(".cursor-light");
             window.addEventListener("pointermove", (event) => {
