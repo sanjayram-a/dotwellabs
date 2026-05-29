@@ -1,0 +1,1433 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AnyLLM — Universal AI Chat Client | Dotwel Labs</title>
+        <meta
+            name="description"
+            content="AnyLLM is the ultimate BYOK AI chat app. Chat with GPT-4o, Claude, Gemini, Llama, and more in one unified workspace. Bring your own API key."
+        />
+        <link rel="canonical" href="https://dotwellabs.web.app/anyllm" />
+        <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-MKBKFJFGQJ"
+        ></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "G-MKBKFJFGQJ");
+        </script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600;700&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --ink: #07120f;
+                --deep: #0c1d18;
+                --moss: #16352d;
+                --cream: #f4ead2;
+                --paper: #fff8e7;
+                --acid: #c8ff4a;
+                --ember: #ff6b2b;
+                --cyan: #53e7d4;
+                --gold: #e7bd59;
+                --muted: rgba(244, 234, 210, 0.72);
+                --shadow: 0 24px 80px rgba(0, 0, 0, 0.18);
+                --radius-xl: 34px;
+                --radius-lg: 24px;
+                --radius-md: 16px;
+                --max: 1180px;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            html {
+                scroll-behavior: smooth;
+                overflow-x: hidden;
+            }
+            body {
+                font-family: "Bricolage Grotesque", sans-serif;
+                background:
+                    radial-gradient(
+                        circle at 12% 10%,
+                        rgba(200, 255, 74, 0.12),
+                        transparent 28%
+                    ),
+                    radial-gradient(
+                        circle at 84% 14%,
+                        rgba(255, 107, 43, 0.14),
+                        transparent 27%
+                    ),
+                    linear-gradient(
+                        135deg,
+                        #07120f 0%,
+                        #0d201b 45%,
+                        #102820 100%
+                    );
+                color: var(--cream);
+                overflow-x: hidden;
+            }
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                z-index: 100;
+                opacity: 0.14;
+                background-image:
+                    linear-gradient(
+                        rgba(255, 255, 255, 0.05) 1px,
+                        transparent 1px
+                    ),
+                    linear-gradient(
+                        90deg,
+                        rgba(255, 255, 255, 0.04) 1px,
+                        transparent 1px
+                    );
+                background-size: 38px 38px;
+                mask-image: linear-gradient(to bottom, black, transparent 88%);
+            }
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+            img {
+                max-width: 100%;
+                display: block;
+            }
+            .container {
+                width: min(var(--max), calc(100% - 40px));
+                margin-inline: auto;
+            }
+            .mono {
+                font-family: "Azeret Mono", monospace;
+                letter-spacing: -0.04em;
+            }
+            .eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                font-family: "Azeret Mono", monospace;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--acid);
+            }
+            .eyebrow::before {
+                content: "";
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                background: var(--acid);
+                box-shadow: 0 0 24px var(--acid);
+            }
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                padding: 14px 28px;
+                border-radius: 999px;
+                font-weight: 700;
+                font-size: 16px;
+                cursor: pointer;
+                border: none;
+                transition: 220ms ease;
+            }
+            .btn-primary {
+                background: var(--acid);
+                color: var(--ink);
+            }
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 40px rgba(200, 255, 74, 0.35);
+            }
+            .btn-ghost {
+                background: rgba(244, 234, 210, 0.08);
+                color: var(--cream);
+                border: 1px solid rgba(244, 234, 210, 0.18);
+            }
+            .btn-ghost:hover {
+                background: rgba(244, 234, 210, 0.14);
+                transform: translateY(-2px);
+            }
+
+            /* Nav */
+            .nav {
+                position: fixed;
+                top: 18px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: min(var(--max), calc(100% - 28px));
+                z-index: 50;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 14px;
+                border: 1px solid rgba(244, 234, 210, 0.16);
+                background: rgba(7, 18, 15, 0.66);
+                backdrop-filter: blur(18px);
+                border-radius: 999px;
+                box-shadow: 0 14px 50px rgba(0, 0, 0, 0.24);
+            }
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                padding-left: 4px;
+                font-weight: 800;
+                font-size: 17px;
+                letter-spacing: -0.04em;
+            }
+            .brand-mark {
+                width: 34px;
+                height: 34px;
+                border-radius: 10px;
+                overflow: hidden;
+                background: var(--moss);
+            }
+            .brand-mark img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .nav-back {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-family: "Azeret Mono", monospace;
+                font-size: 12px;
+                color: var(--muted);
+                transition: 220ms ease;
+            }
+            .nav-back:hover {
+                color: var(--acid);
+            }
+            .nav-back svg {
+                transition: 220ms ease;
+            }
+            .nav-back:hover svg {
+                transform: translateX(-3px);
+            }
+            .nav-cta {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            /* Hero */
+            .hero {
+                padding: 160px 0 100px;
+                text-align: center;
+            }
+            .hero-icon {
+                width: 100px;
+                height: 100px;
+                border-radius: 26px;
+                overflow: hidden;
+                margin: 0 auto 28px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            }
+            .hero-icon img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .hero-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: rgba(200, 255, 74, 0.1);
+                border: 1px solid rgba(200, 255, 74, 0.25);
+                border-radius: 999px;
+                padding: 6px 16px;
+                font-family: "Azeret Mono", monospace;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--acid);
+                margin-bottom: 24px;
+            }
+            .hero h1 {
+                font-size: clamp(48px, 7vw, 96px);
+                line-height: 0.9;
+                letter-spacing: -0.07em;
+                margin-bottom: 24px;
+            }
+            .hero h1 span {
+                color: var(--acid);
+            }
+            .hero-sub {
+                font-size: clamp(17px, 2vw, 21px);
+                color: var(--muted);
+                line-height: 1.6;
+                max-width: 600px;
+                margin: 0 auto 40px;
+            }
+            .hero-actions {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+            .hero-stats {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 40px;
+                margin-top: 60px;
+                padding-top: 40px;
+                border-top: 1px solid rgba(244, 234, 210, 0.1);
+            }
+            .stat-item {
+                text-align: center;
+            }
+            .stat-num {
+                font-size: 32px;
+                font-weight: 800;
+                letter-spacing: -0.05em;
+                color: var(--acid);
+            }
+            .stat-label {
+                font-size: 13px;
+                color: var(--muted);
+                margin-top: 4px;
+                font-family: "Azeret Mono", monospace;
+            }
+
+            /* Models strip */
+            .models-strip {
+                padding: 40px 0;
+                border-top: 1px solid rgba(244, 234, 210, 0.08);
+                border-bottom: 1px solid rgba(244, 234, 210, 0.08);
+                overflow: hidden;
+            }
+            .models-track {
+                display: flex;
+                gap: 16px;
+                animation: scroll-x 28s linear infinite;
+            }
+            .models-track:hover {
+                animation-play-state: paused;
+            }
+            @keyframes scroll-x {
+                from {
+                    transform: translateX(0);
+                }
+                to {
+                    transform: translateX(-50%);
+                }
+            }
+            .model-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 20px;
+                border-radius: 999px;
+                background: rgba(244, 234, 210, 0.06);
+                border: 1px solid rgba(244, 234, 210, 0.12);
+                white-space: nowrap;
+                font-size: 14px;
+                font-weight: 600;
+            }
+            .model-pill .dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+            }
+
+            /* Features */
+            .features {
+                padding: 110px 0;
+            }
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2px;
+                margin-top: 60px;
+                border-radius: var(--radius-xl);
+                overflow: hidden;
+            }
+            .feature-card {
+                background: rgba(244, 234, 210, 0.04);
+                padding: 36px;
+                transition: 220ms ease;
+                position: relative;
+                overflow: hidden;
+            }
+            .feature-card::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                    135deg,
+                    rgba(200, 255, 74, 0.06),
+                    transparent
+                );
+                opacity: 0;
+                transition: 220ms ease;
+            }
+            .feature-card:hover {
+                background: rgba(244, 234, 210, 0.07);
+            }
+            .feature-card:hover::before {
+                opacity: 1;
+            }
+            .feature-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+            .feature-card h3 {
+                font-size: 20px;
+                font-weight: 700;
+                letter-spacing: -0.03em;
+                margin-bottom: 10px;
+            }
+            .feature-card p {
+                font-size: 15px;
+                color: var(--muted);
+                line-height: 1.6;
+            }
+            .feature-tag {
+                display: inline-block;
+                margin-top: 14px;
+                font-family: "Azeret Mono", monospace;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--acid);
+                background: rgba(200, 255, 74, 0.1);
+                padding: 4px 10px;
+                border-radius: 999px;
+            }
+
+            /* Gallery */
+            .gallery {
+                padding: 80px 0 110px;
+            }
+            .gallery-title {
+                margin-bottom: 40px;
+            }
+            .gallery-scroll {
+                display: flex;
+                gap: 16px;
+                overflow-x: auto;
+                padding: 10px 0 24px;
+                cursor: grab;
+                user-select: none;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(200, 255, 74, 0.3) transparent;
+            }
+            .gallery-scroll:active {
+                cursor: grabbing;
+            }
+            .gallery-scroll::-webkit-scrollbar {
+                height: 4px;
+            }
+            .gallery-scroll::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .gallery-scroll::-webkit-scrollbar-thumb {
+                background: rgba(200, 255, 74, 0.3);
+                border-radius: 999px;
+            }
+            .gallery-item {
+                flex: 0 0 auto;
+                width: 220px;
+                border-radius: var(--radius-lg);
+                overflow: hidden;
+                background: rgba(244, 234, 210, 0.05);
+                border: 1px solid rgba(244, 234, 210, 0.1);
+                transition: 220ms ease;
+            }
+            .gallery-item:hover {
+                transform: translateY(-4px);
+                border-color: rgba(200, 255, 74, 0.3);
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            }
+            .gallery-item img {
+                width: 100%;
+                height: 420px;
+                object-fit: cover;
+                display: block;
+            }
+            .gallery-placeholder {
+                flex: 0 0 auto;
+                width: 220px;
+                height: 420px;
+                border-radius: var(--radius-lg);
+                border: 2px dashed rgba(244, 234, 210, 0.15);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                color: rgba(244, 234, 210, 0.25);
+                font-family: "Azeret Mono", monospace;
+                font-size: 12px;
+            }
+            .gallery-placeholder svg {
+                opacity: 0.3;
+            }
+            .gallery-label {
+                padding: 12px 14px;
+                font-size: 12px;
+                font-family: "Azeret Mono", monospace;
+                color: var(--muted);
+            }
+
+            /* BYOK */
+            .byok {
+                padding: 80px 0 110px;
+            }
+            .byok-box {
+                background: rgba(200, 255, 74, 0.05);
+                border: 1px solid rgba(200, 255, 74, 0.2);
+                border-radius: var(--radius-xl);
+                padding: 60px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 60px;
+                align-items: center;
+            }
+            .byok-box h2 {
+                font-size: clamp(36px, 4vw, 56px);
+                letter-spacing: -0.06em;
+                line-height: 1;
+            }
+            .byok-box h2 span {
+                color: var(--acid);
+            }
+            .byok-box p {
+                color: var(--muted);
+                font-size: 17px;
+                line-height: 1.65;
+                margin-top: 16px;
+            }
+            .byok-keys {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                margin-top: 28px;
+            }
+            .key-row {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 14px 18px;
+                background: rgba(7, 18, 15, 0.5);
+                border-radius: var(--radius-md);
+                border: 1px solid rgba(244, 234, 210, 0.08);
+            }
+            .key-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+            .key-name {
+                font-weight: 700;
+                font-size: 15px;
+            }
+            .key-desc {
+                font-size: 13px;
+                color: var(--muted);
+                margin-left: auto;
+                font-family: "Azeret Mono", monospace;
+            }
+
+            /* Alternatives */
+            .alternatives {
+                padding: 0 0 110px;
+            }
+            .alt-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+                margin-top: 40px;
+            }
+            .alt-chip {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 20px;
+                border-radius: 999px;
+                background: rgba(244, 234, 210, 0.05);
+                border: 1px solid rgba(244, 234, 210, 0.12);
+                font-size: 14px;
+            }
+            .alt-chip .check {
+                color: var(--acid);
+                font-weight: 700;
+            }
+
+            /* Footer */
+            .page-footer {
+                padding: 50px 0 34px;
+                border-top: 1px solid rgba(244, 234, 210, 0.1);
+            }
+            .page-footer-inner {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+            .footer-links {
+                display: flex;
+                gap: 24px;
+            }
+            .footer-links a {
+                font-size: 14px;
+                color: var(--muted);
+                transition: 220ms ease;
+            }
+            .footer-links a:hover {
+                color: var(--acid);
+            }
+
+            /* Reveal */
+            .reveal {
+                opacity: 0;
+                transform: translateY(28px);
+                transition:
+                    opacity 600ms ease,
+                    transform 600ms ease;
+            }
+            .reveal.visible {
+                opacity: 1;
+                transform: none;
+            }
+
+            /* Responsive */
+            @media (max-width: 900px) {
+                .features-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+                .byok-box {
+                    grid-template-columns: 1fr;
+                    gap: 36px;
+                    padding: 36px;
+                }
+            }
+            @media (max-width: 600px) {
+                .features-grid {
+                    grid-template-columns: 1fr;
+                }
+                .hero-stats {
+                    gap: 24px;
+                }
+                .nav-cta .btn-ghost {
+                    display: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Nav -->
+        <nav class="nav">
+            <a href="https://dotwellabs.web.app" class="brand">
+                <div class="brand-mark">
+                    <img src="../assets/logo.png" alt="Dotwel Labs" />
+                </div>
+                Dotwel Labs
+            </a>
+            <a href="https://dotwellabs.web.app" class="nav-back">
+                <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Back to home
+            </a>
+            <div class="nav-cta">
+                <a
+                    href="https://play.google.com/store/apps/details?id=com.dotwellabs.anyllm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-primary"
+                    style="padding: 10px 20px; font-size: 14px"
+                >
+                    <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Get on Play
+                </a>
+            </div>
+        </nav>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-icon">
+                    <img src="../assets/anyllm-logo.png" alt="AnyLLM" />
+                </div>
+                <div class="hero-badge">
+                    Android App &bull; Free &bull; BYOK
+                </div>
+                <h1>One app.<br /><span>Every AI.</span></h1>
+                <p class="hero-sub">
+                    Stop juggling five different apps. AnyLLM is the universal
+                    AI workspace — chat with GPT-4o, Claude, Gemini, Llama, and
+                    more. Bring your own API key and pay only for what you use.
+                </p>
+                <div class="hero-actions">
+                    <a
+                        href="https://play.google.com/store/apps/details?id=com.dotwellabs.anyllm"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="btn btn-primary"
+                    >
+                        <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Download Free on Google Play
+                    </a>
+                    <a href="#features" class="btn btn-ghost"
+                        >See all features</a
+                    >
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">10+</div>
+                        <div class="stat-label">AI Providers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">BYOK</div>
+                        <div class="stat-label">No Subscription</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">100%</div>
+                        <div class="stat-label">Private &amp; Local</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">MCP</div>
+                        <div class="stat-label">Tool Support</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Models strip -->
+        <div class="models-strip">
+            <div class="container">
+                <div class="models-track">
+                    <div class="model-pill">
+                        <span class="dot" style="background: #10a37f"></span
+                        >GPT-4o
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #d97706"></span
+                        >Claude Opus
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #4285f4"></span
+                        >Gemini Pro
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #7c3aed"></span
+                        >Llama 3 (Groq)
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #c8ff4a"></span
+                        >Ollama Local
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #ef4444"></span
+                        >Mistral
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #06b6d4"></span
+                        >DeepSeek
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #f59e0b"></span
+                        >Together AI
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #8b5cf6"></span
+                        >Claude Sonnet
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #10a37f"></span
+                        >GPT-4 Turbo
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #4285f4"></span
+                        >Gemini Flash
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #d97706"></span
+                        >Claude Haiku
+                    </div>
+                    <!-- duplicate for seamless loop -->
+                    <div class="model-pill">
+                        <span class="dot" style="background: #10a37f"></span
+                        >GPT-4o
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #d97706"></span
+                        >Claude Opus
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #4285f4"></span
+                        >Gemini Pro
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #7c3aed"></span
+                        >Llama 3 (Groq)
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #c8ff4a"></span
+                        >Ollama Local
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #ef4444"></span
+                        >Mistral
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #06b6d4"></span
+                        >DeepSeek
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #f59e0b"></span
+                        >Together AI
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #8b5cf6"></span
+                        >Claude Sonnet
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #10a37f"></span
+                        >GPT-4 Turbo
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #4285f4"></span
+                        >Gemini Flash
+                    </div>
+                    <div class="model-pill">
+                        <span class="dot" style="background: #d97706"></span
+                        >Claude Haiku
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <section class="features" id="features">
+            <div class="container">
+                <span class="eyebrow reveal">Features</span>
+                <h2
+                    class="section-title reveal"
+                    style="
+                        margin-top: 18px;
+                        font-size: clamp(42px, 6vw, 82px);
+                        line-height: 0.92;
+                        letter-spacing: -0.07em;
+                    "
+                >
+                    Why users love<br />AnyLLM
+                </h2>
+                <div class="features-grid" style="margin-top: 60px">
+                    <div class="feature-card reveal">
+                        <div
+                            class="feature-icon"
+                            style="background: rgba(200, 255, 74, 0.12)"
+                        >
+                            🤖
+                        </div>
+                        <h3>Universal AI Hub</h3>
+                        <p>
+                            Access every major LLM in one place — OpenAI,
+                            Anthropic, Google, Meta, Mistral, DeepSeek, and
+                            more. No more switching between apps.
+                        </p>
+                        <span class="feature-tag">10+ Providers</span>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div
+                            class="feature-icon"
+                            style="background: rgba(255, 107, 43, 0.12)"
+                        >
+                            ⚔️
+                        </div>
+                        <h3>AI vs. AI Debates</h3>
+                        <p>
+                            Pit two AI models against each other on any topic.
+                            Watch GPT-4o debate Claude Sonnet live in real time.
+                            A feature no other AI chat app offers.
+                        </p>
+                        <span class="feature-tag">Unique Feature</span>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div
+                            class="feature-icon"
+                            style="background: rgba(83, 231, 212, 0.12)"
+                        >
+                            🔧
+                        </div>
+                        <h3>MCP Tool Integration</h3>
+                        <p>
+                            Connect AnyLLM to external tools and APIs using the
+                            Model Context Protocol. Turn your AI chatbot into a
+                            real agent that can browse, search, and take
+                            actions.
+                        </p>
+                        <span class="feature-tag">SSE + HTTP</span>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div
+                            class="feature-icon"
+                            style="background: rgba(200, 255, 74, 0.12)"
+                        >
+                            📜
+                        </div>
+                        <h3>Custom Agent Skills</h3>
+                        <p>
+                            Import SKILL.md files to give your AI deep domain
+                            knowledge. Build a coding assistant, legal advisor,
+                            or creative writing partner in seconds.
+                        </p>
+                        <span class="feature-tag">SKILL.md</span>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div
+                            class="feature-icon"
+                            style="background: rgba(231, 189, 89, 0.12)"
+                        >
+                            🌐
+                        </div>
+                        <h3>Web Search AI</h3>
+                        <p>
+                            Enable live browsing with DuckDuckGo, Brave Search,
+                            or SerpAPI. Get real-time answers instead of
+                            outdated model knowledge.
+                        </p>
+                        <span class="feature-tag">Real-time</span>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div
+                            class="feature-icon"
+                            style="background: rgba(139, 92, 246, 0.12)"
+                        >
+                            🧠
+                        </div>
+                        <h3>Thinking Mode</h3>
+                        <p>
+                            Toggle reasoning mode for models like Claude and
+                            GPT-o1 to see step-by-step thinking before the final
+                            answer. Built for deep analysis.
+                        </p>
+                        <span class="feature-tag">Chain-of-thought</span>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div
+                            class="feature-icon"
+                            style="background: rgba(83, 231, 212, 0.12)"
+                        >
+                            ✨
+                        </div>
+                        <h3>Rich Chat Interface</h3>
+                        <p>
+                            Full Markdown rendering, LaTeX math equations, code
+                            syntax highlighting, and smooth real-time streaming.
+                            The most polished AI chat UI on Android.
+                        </p>
+                        <span class="feature-tag">Streaming</span>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div
+                            class="feature-icon"
+                            style="background: rgba(255, 107, 43, 0.12)"
+                        >
+                            🎭
+                        </div>
+                        <h3>System Prompt Presets</h3>
+                        <p>
+                            Instantly switch your AI into a Code Expert,
+                            Socratic Teacher, Creative Writer, or your own saved
+                            persona. One tap to transform your assistant.
+                        </p>
+                        <span class="feature-tag">Personas</span>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div
+                            class="feature-icon"
+                            style="background: rgba(200, 255, 74, 0.12)"
+                        >
+                            🔒
+                        </div>
+                        <h3>100% Private &amp; Secure</h3>
+                        <p>
+                            Your API keys are encrypted with bank-grade secure
+                            storage. AnyLLM never stores your conversations on
+                            external servers. Your data stays on your device.
+                        </p>
+                        <span class="feature-tag">On-device</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screenshot Gallery -->
+        <section class="gallery">
+            <div class="container">
+                <span class="eyebrow reveal">Screenshots</span>
+                <h2
+                    class="gallery-title reveal"
+                    style="
+                        margin-top: 18px;
+                        font-size: clamp(36px, 5vw, 64px);
+                        line-height: 0.92;
+                        letter-spacing: -0.06em;
+                    "
+                >
+                    See it in action
+                </h2>
+                <p
+                    class="reveal"
+                    style="
+                        color: rgba(244, 234, 210, 0.72);
+                        font-size: 17px;
+                        margin-top: 16px;
+                        margin-bottom: 8px;
+                    "
+                >
+                    Drag to scroll &rarr;
+                </p>
+            </div>
+            <div class="container" style="max-width: 100%; padding: 0 20px">
+                <div class="gallery-scroll" id="galleryScroll">
+                    <div class="gallery-item">
+                        <img
+                            src="../assets/anyllm/app-preview.webp"
+                            alt="AnyLLM app preview"
+                        />
+                        <div class="gallery-label">App Overview</div>
+                    </div>
+
+                    <div class="gallery-item">
+                        <img
+                            src="../assets/anyllm/screenshot-debate.webp"
+                            alt="AI vs AI Debate"
+                        />
+                        <div class="gallery-label">AI vs. AI Debate</div>
+                    </div>
+
+                    <div class="gallery-item">
+                        <img
+                            src="../assets/anyllm/screenshot-models.webp"
+                            alt="Model selection"
+                        />
+                        <div class="gallery-label">Model Selection</div>
+                    </div>
+
+                    <div class="gallery-item">
+                        <img
+                            src="../assets/anyllm/screenshot-providers.webp"
+                            alt="Provider setup"
+                        />
+                        <div class="gallery-label">Provider Setup</div>
+                    </div>
+
+                    <div class="gallery-item">
+                        <img
+                            src="../assets/anyllm/screenshot-tools.webp"
+                            alt="MCP Tools"
+                        />
+                        <div class="gallery-label">MCP Tools</div>
+                    </div>
+
+                    <div class="gallery-placeholder">
+                        <svg
+                            width="32"
+                            height="32"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                        >
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Coming soon
+                    </div>
+
+                    <div class="gallery-placeholder">
+                        <svg
+                            width="32"
+                            height="32"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                        >
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Coming soon
+                    </div>
+
+                    <div class="gallery-placeholder">
+                        <svg
+                            width="32"
+                            height="32"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                        >
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Coming soon
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BYOK Section -->
+        <section class="byok">
+            <div class="container">
+                <div class="byok-box reveal">
+                    <div>
+                        <span class="eyebrow">Bring Your Own Key</span>
+                        <h2 style="margin-top: 18px">
+                            Your keys.<br /><span>Your cost.</span>
+                        </h2>
+                        <p>
+                            AnyLLM is a BYOK app — you connect your own API keys
+                            directly to the providers. You pay only for what you
+                            use, at provider rates. No subscriptions, no hidden
+                            fees, no middleman.
+                        </p>
+                        <a
+                            href="https://play.google.com/store/apps/details?id=com.dotwellabs.anyllm"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="btn btn-primary"
+                            style="margin-top: 28px"
+                        >
+                            <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            Download Free
+                        </a>
+                    </div>
+                    <div class="byok-keys">
+                        <div class="key-row">
+                            <span
+                                class="key-dot"
+                                style="background: #10a37f"
+                            ></span>
+                            <span class="key-name">OpenAI</span>
+                            <span class="key-desc">GPT-4o, GPT-4, ChatGPT</span>
+                        </div>
+                        <div class="key-row">
+                            <span
+                                class="key-dot"
+                                style="background: #d97706"
+                            ></span>
+                            <span class="key-name">Anthropic</span>
+                            <span class="key-desc"
+                                >Claude Opus, Sonnet, Haiku</span
+                            >
+                        </div>
+                        <div class="key-row">
+                            <span
+                                class="key-dot"
+                                style="background: #4285f4"
+                            ></span>
+                            <span class="key-name">Google</span>
+                            <span class="key-desc"
+                                >Gemini Pro, Gemini Flash</span
+                            >
+                        </div>
+                        <div class="key-row">
+                            <span
+                                class="key-dot"
+                                style="background: #7c3aed"
+                            ></span>
+                            <span class="key-name">Groq</span>
+                            <span class="key-desc">Llama 3 (ultra-fast)</span>
+                        </div>
+                        <div class="key-row">
+                            <span
+                                class="key-dot"
+                                style="background: #c8ff4a"
+                            ></span>
+                            <span class="key-name">Ollama</span>
+                            <span class="key-desc">Local models, offline</span>
+                        </div>
+                        <div class="key-row">
+                            <span
+                                class="key-dot"
+                                style="background: #ef4444"
+                            ></span>
+                            <span class="key-name">Mistral / DeepSeek</span>
+                            <span class="key-desc">+ more providers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alternatives -->
+        <section class="alternatives">
+            <div class="container">
+                <span class="eyebrow reveal">The Best Alternative To</span>
+                <h2
+                    class="reveal"
+                    style="
+                        margin-top: 18px;
+                        font-size: clamp(36px, 4vw, 56px);
+                        letter-spacing: -0.06em;
+                        line-height: 1;
+                    "
+                >
+                    All of them.<br />In one app.
+                </h2>
+                <div class="alt-grid reveal">
+                    <div class="alt-chip">
+                        <span class="check">&#10003;</span> ChatGPT app
+                    </div>
+                    <div class="alt-chip">
+                        <span class="check">&#10003;</span> Claude AI app
+                    </div>
+                    <div class="alt-chip">
+                        <span class="check">&#10003;</span> Google Gemini app
+                    </div>
+                    <div class="alt-chip">
+                        <span class="check">&#10003;</span> Perplexity AI
+                    </div>
+                    <div class="alt-chip">
+                        <span class="check">&#10003;</span> Poe AI
+                    </div>
+                    <div class="alt-chip">
+                        <span class="check">&#10003;</span> Mistral AI app
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section style="padding: 0 0 110px">
+            <div class="container" style="text-align: center">
+                <div
+                    class="reveal"
+                    style="
+                        background: rgba(200, 255, 74, 0.06);
+                        border: 1px solid rgba(200, 255, 74, 0.18);
+                        border-radius: var(--radius-xl);
+                        padding: 80px 40px;
+                    "
+                >
+                    <span class="eyebrow" style="justify-content: center"
+                        >Free Download</span
+                    >
+                    <h2
+                        style="
+                            margin-top: 18px;
+                            font-size: clamp(40px, 5vw, 72px);
+                            letter-spacing: -0.06em;
+                            line-height: 0.95;
+                        "
+                    >
+                        Build your perfect<br />AI workspace.
+                    </h2>
+                    <p
+                        style="
+                            color: var(--muted);
+                            font-size: 18px;
+                            max-width: 520px;
+                            margin: 20px auto 36px;
+                            line-height: 1.6;
+                        "
+                    >
+                        Bring your own keys, pick your models, and experience
+                        the future of AI chat. Free to download, no subscription
+                        required.
+                    </p>
+                    <a
+                        href="https://play.google.com/store/apps/details?id=com.dotwellabs.anyllm"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="btn btn-primary"
+                        style="font-size: 18px; padding: 18px 36px"
+                    >
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Get AnyLLM on Google Play
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="page-footer">
+            <div class="container">
+                <div class="page-footer-inner">
+                    <a
+                        href="https://dotwellabs.web.app"
+                        class="brand"
+                        style="font-size: 15px"
+                    >
+                        <div class="brand-mark">
+                            <img src="../assets/logo.png" alt="Dotwel Labs" />
+                        </div>
+                        Dotwel Labs
+                    </a>
+                    <div class="footer-links">
+                        <a href="https://dotwellabs.web.app">Home</a>
+                        <a href="/anyllm/privacy-policy">Privacy Policy</a>
+                        <a
+                            href="https://play.google.com/store/apps/details?id=com.dotwellabs.anyllm"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >Google Play</a
+                        >
+                    </div>
+                    <span
+                        style="font-size: 13px; color: rgba(244, 234, 210, 0.4)"
+                        >&copy; <span id="year"></span> Dotwel Labs</span
+                    >
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            document.getElementById("year").textContent =
+                new Date().getFullYear();
+
+            // Reveal on scroll
+            const revealObserver = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((e) => {
+                        if (e.isIntersecting) {
+                            e.target.classList.add("visible");
+                            revealObserver.unobserve(e.target);
+                        }
+                    });
+                },
+                { threshold: 0.1 },
+            );
+            document
+                .querySelectorAll(".reveal")
+                .forEach((el) => revealObserver.observe(el));
+
+            // Drag-to-scroll gallery
+            const gallery = document.getElementById("galleryScroll");
+            let isDown = false,
+                startX,
+                scrollLeft;
+            gallery.addEventListener("mousedown", (e) => {
+                isDown = true;
+                gallery.classList.add("active");
+                startX = e.pageX - gallery.offsetLeft;
+                scrollLeft = gallery.scrollLeft;
+            });
+            gallery.addEventListener("mouseleave", () => {
+                isDown = false;
+            });
+            gallery.addEventListener("mouseup", () => {
+                isDown = false;
+            });
+            gallery.addEventListener("mousemove", (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - gallery.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                gallery.scrollLeft = scrollLeft - walk;
+            });
+
+            // Touch support
+            gallery.addEventListener(
+                "touchstart",
+                (e) => {
+                    startX = e.touches[0].pageX - gallery.offsetLeft;
+                    scrollLeft = gallery.scrollLeft;
+                },
+                { passive: true },
+            );
+            gallery.addEventListener(
+                "touchmove",
+                (e) => {
+                    const x = e.touches[0].pageX - gallery.offsetLeft;
+                    const walk = (x - startX) * 1.5;
+                    gallery.scrollLeft = scrollLeft - walk;
+                },
+                { passive: true },
+            );
+        </script>
+    </body>
+</html>
